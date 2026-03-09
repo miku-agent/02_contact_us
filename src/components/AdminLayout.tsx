@@ -103,10 +103,10 @@ export function AdminLayout({
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] text-[#111827]">
-      <div className="mx-auto flex max-w-7xl gap-6 px-4 py-6">
+      <div className="flex min-h-screen w-full">
         {/* Left Navigation */}
-        <aside className="hidden w-64 shrink-0 lg:block">
-          <div className="rounded-lg bg-white p-4">
+        <aside className="hidden w-64 shrink-0 border-r border-gray-200 bg-white lg:block">
+          <div className="sticky top-0 flex h-screen flex-col overflow-y-auto p-4">
             <div className="mb-4">
               <div className="text-lg font-extrabold tracking-tight">02 Contact Us</div>
               <div className="text-xs font-medium text-gray-600">Admin Panel</div>
@@ -181,7 +181,7 @@ export function AdminLayout({
         </aside>
 
         {/* Main */}
-        <main className="min-w-0 flex-1">
+        <main className="min-w-0 flex-1 p-6">
           <header className="mb-4 rounded-lg bg-white p-5">
             <Breadcrumbs path={pathname} />
             <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
