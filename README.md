@@ -1,5 +1,12 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
+## Branching
+
+- `dev`: day-to-day development
+- `main`: production
+
+See: [`docs/BRANCHING.md`](./docs/BRANCHING.md)
+
 ## Getting Started
 
 First, run the development server:
