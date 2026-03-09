@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { AdminLayout } from "../components/AdminLayout";
 
 type ContactStatus = "NEW" | "DONE" | "ARCHIVED" | "SPAM";
 
@@ -56,11 +57,6 @@ async function patchStatus(id: string, status: ContactStatus) {
   return json.item as { id: string; status: ContactStatus };
 }
 
-function CountBadge({ count }: { count: number }) {
-  if (!count) return null;
-  return <span className="badge badge-primary badge-sm ml-2 rounded-full">{count}</span>;
-}
-
 export default function InboxPage() {
   const [status, setStatus] = useState<ContactStatus>("NEW");
   const [service, setService] = useState<string>("all");
@@ -86,7 +82,9 @@ export default function InboxPage() {
 
   useEffect(() => {
     let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoadingSummary(true);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setError(null);
 
     fetchSummary({ service })
@@ -111,7 +109,9 @@ export default function InboxPage() {
 
   useEffect(() => {
     let cancelled = false;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setError(null);
 
     fetchMessages({ status, service })
@@ -159,134 +159,141 @@ export default function InboxPage() {
   }
 
   return (
-    <main className="min-h-screen bg-base-200">
-      <div className="mx-auto flex max-w-6xl gap-4 px-4 py-10">
-        {/* Sidebar (Services) */}
-        <aside className="hidden w-56 shrink-0 sm:block">
-          <div className="rounded-xl bg-base-100 p-3 shadow">
-            <div className="mb-2 text-xs font-semibold tracking-wider opacity-70">SERVICES</div>
+    <AdminLayout
+      title="Inbox"
+      nav={[
+        { href: "/inbox", label: "Inbox", badge: allNewCount },
+        { href: "/", label: "Contact Form" },
+      ]}
+    >
+      <div className="grid gap-4 lg:grid-cols-[260px_1fr]">
+        {/* Filters */}
+        <section className="rounded-lg bg-white p-5">
+          <div className="text-xs font-semibold tracking-wider text-gray-600">FILTERS</div>
 
-            <ul className="menu menu-sm">
-              <li>
-                <a className={service === "all" ? "active" : ""} onClick={() => setService("all")}>
-                  <span>all</span>
-                  <CountBadge count={allNewCount} />
-                </a>
-              </li>
+          <div className="mt-3">
+            <div className="text-xs font-semibold text-gray-600">Service</div>
+            <select
+              className="mt-2 h-12 w-full rounded-md bg-gray-100 px-3 text-sm outline-none transition-all duration-200 focus:bg-white focus:border-2 focus:border-[#3B82F6]"
+              value={service}
+              onChange={(e) => setService(e.target.value)}
+            >
+              {services.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
 
-              {services
-                .filter((s) => s !== "all")
-                .map((s) => {
-                  const newCount = (summary?.services ?? []).find((x) => x.service === s)?.newCount ?? 0;
-                  return (
-                    <li key={s}>
-                      <a className={service === s ? "active" : ""} onClick={() => setService(s)}>
-                        <span className="truncate">{s}</span>
-                        <CountBadge count={newCount} />
-                      </a>
-                    </li>
-                  );
-                })}
-            </ul>
-
-            {loadingSummary ? <div className="mt-2 text-xs opacity-60">loading…</div> : null}
+            {loadingSummary ? <div className="mt-2 text-xs text-gray-600">loading…</div> : null}
           </div>
-        </aside>
 
-        {/* Main */}
-        <section className="min-w-0 flex-1">
-          <header className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold">Inbox</h1>
-              <p className="text-sm opacity-70">
-                {service === "all" ? "All services" : `Service: ${service}`} · Spam is isolated
-              </p>
+          <div className="mt-5">
+            <div className="text-xs font-semibold text-gray-600">Status</div>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              {TABS.map((t) => {
+                const active = status === t.key;
+                const badge = t.key === "NEW" ? selectedNewCount : undefined;
+                return (
+                  <button
+                    key={t.key}
+                    type="button"
+                    onClick={() => setStatus(t.key)}
+                    className={
+                      "flex items-center justify-between rounded-md px-3 py-2 text-sm font-semibold transition-all duration-200 " +
+                      (active ? "bg-[#3B82F6] text-white hover:bg-blue-600" : "bg-gray-100 text-[#111827] hover:bg-gray-200")
+                    }
+                  >
+                    <span>{t.label}</span>
+                    {badge ? <span className={"ml-2 rounded-full px-2 py-0.5 text-xs " + (active ? "bg-white text-[#111827]" : "bg-[#3B82F6] text-white")}>{badge}</span> : null}
+                  </button>
+                );
+              })}
             </div>
-
-            {/* Mobile service selector */}
-            <label className="form-control w-full max-w-xs sm:hidden">
-              <div className="label">
-                <span className="label-text">Service</span>
-              </div>
-              <select className="select select-bordered" value={service} onChange={(e) => setService(e.target.value)}>
-                {services.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </header>
-
-          <div role="tablist" className="tabs tabs-lifted mb-4">
-            {TABS.map((t) => (
-              <a
-                key={t.key}
-                role="tab"
-                className={`tab ${status === t.key ? "tab-active" : ""}`}
-                onClick={() => setStatus(t.key)}
-              >
-                <span>{t.label}</span>
-                {t.key === "NEW" ? <CountBadge count={selectedNewCount} /> : null}
-              </a>
-            ))}
           </div>
 
           {error ? (
-            <div className="alert alert-error mb-4">
-              <span>에러: {error}</span>
+            <div className="mt-5 rounded-lg bg-[#FEE2E2] p-4 text-sm text-[#991B1B]">
+              <div className="font-semibold">에러</div>
+              <div className="mt-1 break-words">{error}</div>
             </div>
           ) : null}
+        </section>
 
-          {loading ? <div className="loading loading-spinner loading-lg" /> : null}
-
-          {!loading && items.length === 0 ? (
-            <div className="rounded-xl bg-base-100 p-6 shadow">
-              <p className="opacity-70">No messages.</p>
+        {/* List */}
+        <section className="rounded-lg bg-white p-5">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="text-lg font-extrabold tracking-tight">Messages</h2>
+              <p className="text-sm text-gray-600">
+                {service === "all" ? "All services" : `Service: ${service}`} · Status: {status}
+              </p>
             </div>
-          ) : null}
+          </div>
 
-          <ul className="flex flex-col gap-3">
-            {items.map((m) => (
-              <li key={m.id} className="rounded-xl bg-base-100 p-4 shadow">
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                  <div className="min-w-0 flex-1">
-                    <div className="mb-1 flex flex-wrap items-center gap-2">
-                      <span className="badge badge-outline">{m.service}</span>
-                      <span className="text-sm opacity-70">{new Date(m.createdAt).toLocaleString()}</span>
-                    </div>
+          {loading ? <div className="mt-6 text-sm text-gray-600">Loading…</div> : null}
 
-                    <div className="text-sm">
-                      <span className="font-semibold">{m.name}</span>
-                      <span className="opacity-60"> · </span>
-                      <a className="link" href={`mailto:${m.email}`}>
+          {!loading && items.length === 0 ? <div className="mt-6 text-sm text-gray-600">No messages.</div> : null}
+
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full min-w-[720px] border-separate border-spacing-0 text-left text-sm">
+              <thead>
+                <tr className="text-xs font-semibold tracking-wider text-gray-600">
+                  <th className="px-3 py-3">Service</th>
+                  <th className="px-3 py-3">From</th>
+                  <th className="px-3 py-3">Message</th>
+                  <th className="px-3 py-3">Created</th>
+                  <th className="px-3 py-3">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {items.map((m) => (
+                  <tr key={m.id} className="border-t-2 border-gray-100">
+                    <td className="px-3 py-3 font-semibold">{m.service}</td>
+                    <td className="px-3 py-3">
+                      <div className="font-semibold">{m.name}</div>
+                      <a className="text-[#3B82F6] hover:underline" href={`mailto:${m.email}`}>
                         {m.email}
                       </a>
-                    </div>
-
-                    <details className="mt-2">
-                      <summary className="cursor-pointer select-none text-sm opacity-70">message</summary>
-                      <pre className="mt-2 whitespace-pre-wrap break-words rounded-lg bg-base-200 p-3 text-sm">{m.message}</pre>
-                    </details>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 sm:justify-end">
-                    <button className="btn btn-sm" onClick={() => onSetStatus(m.id, "DONE")}>
-                      Done
-                    </button>
-                    <button className="btn btn-sm" onClick={() => onSetStatus(m.id, "ARCHIVED")}>
-                      Archive
-                    </button>
-                    <button className="btn btn-sm btn-error" onClick={() => onSetStatus(m.id, "SPAM")}>
-                      Spam
-                    </button>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                    </td>
+                    <td className="px-3 py-3">
+                      <details>
+                        <summary className="cursor-pointer select-none text-gray-600">open</summary>
+                        <pre className="mt-2 whitespace-pre-wrap break-words rounded-md bg-gray-100 p-3 text-xs leading-relaxed text-[#111827]">
+                          {m.message}
+                        </pre>
+                      </details>
+                    </td>
+                    <td className="px-3 py-3 text-gray-600">{new Date(m.createdAt).toLocaleString()}</td>
+                    <td className="px-3 py-3">
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          className="h-10 rounded-md bg-gray-100 px-3 text-xs font-semibold transition-all duration-200 hover:scale-105 hover:bg-gray-200"
+                          onClick={() => onSetStatus(m.id, "DONE")}
+                        >
+                          Done
+                        </button>
+                        <button
+                          className="h-10 rounded-md bg-gray-100 px-3 text-xs font-semibold transition-all duration-200 hover:scale-105 hover:bg-gray-200"
+                          onClick={() => onSetStatus(m.id, "ARCHIVED")}
+                        >
+                          Archive
+                        </button>
+                        <button
+                          className="h-10 rounded-md bg-[#FEE2E2] px-3 text-xs font-semibold text-[#991B1B] transition-all duration-200 hover:scale-105"
+                          onClick={() => onSetStatus(m.id, "SPAM")}
+                        >
+                          Spam
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </section>
       </div>
-    </main>
+    </AdminLayout>
   );
 }

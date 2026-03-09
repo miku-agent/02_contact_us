@@ -9,7 +9,13 @@ type SummaryResponse = {
   services: Array<{ service: string; newCount: number }>;
 };
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<SummaryResponse | any>) {
+type ErrorResponse = {
+  ok: false;
+  error: string;
+  [key: string]: unknown;
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<SummaryResponse | ErrorResponse>) {
   if (req.method !== "GET") {
     res.setHeader("Allow", "GET");
     return res.status(405).json({ ok: false, error: "METHOD_NOT_ALLOWED" });

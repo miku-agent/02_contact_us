@@ -35,9 +35,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
 
     return res.status(200).json({ ok: true, item: updated });
-  } catch (e: any) {
+  } catch (e: unknown) {
     // Prisma: Record to update not found.
-    if (e?.code === "P2025") {
+    if (typeof e === "object" && e !== null && "code" in e && (e as { code?: string }).code === "P2025") {
       return res.status(404).json({ ok: false, error: "NOT_FOUND" });
     }
     throw e;
