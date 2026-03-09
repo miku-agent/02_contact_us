@@ -9,7 +9,8 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   webServer: {
-    command: "pnpm exec next dev -p 3001",
+    command:
+      "DATABASE_URL=file:./test.db pnpm prisma db push && DATABASE_URL=file:./test.db pnpm exec next dev -p 3001",
     url: "http://localhost:3001",
     reuseExistingServer: !process.env.CI,
   },

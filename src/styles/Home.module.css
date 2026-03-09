@@ -139,3 +139,63 @@ a.secondary {
     --button-secondary-border: #1a1a1a;
   }
 }
+
+.card {
+  margin-top: 32px;
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px;
+  border: 1px solid var(--button-secondary-border);
+  border-radius: 14px;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--button-secondary-border);
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 14px;
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.primary {
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background: var(--text-primary);
+  color: var(--background);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.success {
+  color: #0a7a2f;
+  font-size: 14px;
+}
+
+.error {
+  color: #b10000;
+  font-size: 14px;
+}
