@@ -10,7 +10,7 @@ export default defineConfig({
   },
   webServer: {
     command:
-      "DATABASE_URL=file:./test.db pnpm prisma db push && DATABASE_URL=file:./test.db pnpm exec next dev -p 3001",
+      "DATABASE_URL=file:./test.db pnpm prisma db push --accept-data-loss && DATABASE_URL=file:./test.db pnpm exec next dev -p 3001",
     url: "http://localhost:3001/",
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

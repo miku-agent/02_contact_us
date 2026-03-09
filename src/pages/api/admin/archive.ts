@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await prisma.contactMessage.update({
     where: { id: parsed.data.id },
-    data: { archived: parsed.data.archived },
+    data: { status: parsed.data.archived ? "ARCHIVED" : "NEW" },
   });
 
   return res.status(200).json({ ok: true });

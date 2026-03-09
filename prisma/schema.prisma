@@ -7,15 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ContactStatus {
+  NEW
+  DONE
+  ARCHIVED
+  SPAM
+}
+
 model ContactMessage {
-  id        String   @id @default(cuid())
-  service   String   @default("default")
+  id        String        @id @default(cuid())
+  service   String        @default("default")
   name      String
   email     String
   message   String
-  archived  Boolean  @default(false)
-  createdAt DateTime @default(now())
+  status    ContactStatus @default(NEW)
+  createdAt DateTime      @default(now())
 
   @@index([service, createdAt])
-  @@index([archived, createdAt])
+  @@index([status, createdAt])
 }
