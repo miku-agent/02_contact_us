@@ -13,7 +13,7 @@ export default function ContactUsOverviewPage() {
           href: "/contact-us",
           defaultOpen: true,
           children: [
-            { href: "/contact-us/a", label: "A" },
+            { href: "/contact-us/a", label: "MikuDashboard" },
             { href: "/contact-us/b", label: "B" },
             { href: "/contact-us/c", label: "C" },
           ],
@@ -23,11 +23,11 @@ export default function ContactUsOverviewPage() {
       <section className="rounded-lg bg-white p-5">
         <div className="text-xs font-semibold tracking-wider text-gray-600">SERVICES</div>
         <h2 className="mt-2 text-lg font-extrabold tracking-tight">제품별 Contact Us</h2>
-        <p className="mt-2 text-sm text-gray-600">사이드바에서 서비스(A/B/C)를 선택하면 해당 제품의 문의 화면으로 이동해요.</p>
+        <p className="mt-2 text-sm text-gray-600">사이드바에서 서비스(MikuDashboard/B/C)를 선택하면 해당 제품의 문의 화면으로 이동해요.</p>
 
         <div className="mt-4 grid gap-3 sm:grid-cols-3">
           {[
-            { key: "A", href: "/contact-us/a" },
+            { key: "MikuDashboard", href: "/contact-us/a" },
             { key: "B", href: "/contact-us/b" },
             { key: "C", href: "/contact-us/c" },
           ].map((s) => (

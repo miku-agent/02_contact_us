@@ -94,7 +94,7 @@ export function AdminLayout({
         href: "/contact-us",
         defaultOpen: true,
         children: [
-          { href: "/contact-us/a", label: "A" },
+          { href: "/contact-us/a", label: "MikuDashboard" },
           { href: "/contact-us/b", label: "B" },
           { href: "/contact-us/c", label: "C" },
         ],
