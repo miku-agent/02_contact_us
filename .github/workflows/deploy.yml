@@ -34,7 +34,13 @@ jobs:
 
       - name: 🔐 Restore Secret Environment
         run: |
-          echo "DATABASE_URL=${{ secrets.CONTACT_DATABASE_URL }}" > .env.local
+          if [ -z "${{ secrets.CONTACT_DATABASE_URL }}" ]; then
+            echo "Missing GitHub Secret: CONTACT_DATABASE_URL" >&2
+            exit 1
+          fi
+
+          # Prisma loads .env by default (not .env.local) in CI.
+          echo "DATABASE_URL=${{ secrets.CONTACT_DATABASE_URL }}" > .env
 
       - name: 🗄️ Prisma migrate (deploy)
         run: pnpm prisma migrate deploy
