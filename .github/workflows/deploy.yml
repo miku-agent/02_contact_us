@@ -1,0 +1,49 @@
+name: 🚀 02_contact_us Deploy
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    steps:
+      - name: 🎹 Checkout
+        uses: actions/checkout@v4
+
+      - name: 🥁 Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+          run_install: false
+
+      - name: 📦 Restore pnpm & next cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            node_modules
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-pnpm-
+
+      - name: 📥 Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔐 Restore Secret Environment
+        run: |
+          echo "DATABASE_URL=${{ secrets.CONTACT_DATABASE_URL }}" > .env.local
+
+      - name: 🗄️ Prisma migrate (deploy)
+        run: pnpm prisma migrate deploy
+
+      - name: 🏗️ Build
+        run: pnpm build
+
+      - name: 🎤 Start/Restart App (pm2)
+        run: |
+          pm2 delete 02_contact_us || true
+          PORT=23100 pm2 start "./scripts/run-contact-us.sh" --name "02_contact_us"
+          pm2 save
