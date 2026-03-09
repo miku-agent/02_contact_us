@@ -145,15 +145,6 @@ export function AdminLayout({
                     </summary>
 
                     <div className="mt-1 flex flex-col gap-1 pl-3">
-                      {groupHref ? (
-                        <NavLink
-                          href={groupHref}
-                          label="Overview"
-                          active={groupActive}
-                          className="text-xs font-bold"
-                        />
-                      ) : null}
-
                       {it.children!.map((c) => {
                         if (!c.href) return null;
                         return (
