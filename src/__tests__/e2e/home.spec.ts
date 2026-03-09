@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
-test("admin page renders", async ({ page }) => {
-  await page.goto("/admin");
-  await expect(page).toHaveTitle(/Admin/i);
+test("inbox page renders on root", async ({ page }) => {
+  await page.goto("/");
+  await expect(page).toHaveTitle(/Contact Inbox/i);
   await expect(page.getByText("Contact Inbox")).toBeVisible();
 });
