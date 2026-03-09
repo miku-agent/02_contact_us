@@ -19,10 +19,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
   }
 
-  const { name, email, message } = parsed.data;
+  const { service, name, email, message } = parsed.data;
 
   const saved = await prisma.contactMessage.create({
-    data: { name, email, message },
+    data: { service, name, email, message },
     select: { id: true },
   });
 

@@ -9,10 +9,13 @@ datasource db {
 
 model ContactMessage {
   id        String   @id @default(cuid())
+  service   String   @default("default")
   name      String
   email     String
   message   String
+  archived  Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  @@index([createdAt])
+  @@index([service, createdAt])
+  @@index([archived, createdAt])
 }
