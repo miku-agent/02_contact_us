@@ -3,23 +3,43 @@ import { useRouter } from "next/router";
 import type { ReactNode } from "react";
 
 type NavItem = {
-  href: string;
+  href?: string;
   label: string;
   badge?: number;
+  children?: NavItem[];
+  defaultOpen?: boolean;
 };
 
-function NavLink({ href, label, active, badge }: { href: string; label: string; active: boolean; badge?: number }) {
+function NavLink({
+  href,
+  label,
+  active,
+  badge,
+  className,
+}: {
+  href: string;
+  label: string;
+  active: boolean;
+  badge?: number;
+  className?: string;
+}) {
   return (
     <Link
       href={href}
       className={
         "flex items-center justify-between rounded-md px-3 py-2 text-sm font-semibold transition-all duration-200 " +
-        (active ? "bg-[#111827] text-white" : "bg-transparent text-[#111827] hover:bg-gray-200")
+        (active ? "bg-[#111827] text-white" : "bg-transparent text-[#111827] hover:bg-gray-200") +
+        (className ? ` ${className}` : "")
       }
     >
       <span className="truncate">{label}</span>
       {badge && badge > 0 ? (
-        <span className={"ml-2 inline-flex min-w-6 items-center justify-center rounded-full px-2 py-0.5 text-xs " + (active ? "bg-white text-[#111827]" : "bg-[#3B82F6] text-white")}>
+        <span
+          className={
+            "ml-2 inline-flex min-w-6 items-center justify-center rounded-full px-2 py-0.5 text-xs " +
+            (active ? "bg-white text-[#111827]" : "bg-[#3B82F6] text-white")
+          }
+        >
           {badge}
         </span>
       ) : null}
@@ -69,7 +89,16 @@ export function AdminLayout({
     nav ??
     [
       { href: "/inbox", label: "Inbox" },
-      { href: "/", label: "Contact Form" },
+      {
+        label: "Contact-us",
+        href: "/contact-us",
+        defaultOpen: true,
+        children: [
+          { href: "/contact-us/a", label: "A" },
+          { href: "/contact-us/b", label: "B" },
+          { href: "/contact-us/c", label: "C" },
+        ],
+      },
     ];
 
   return (
@@ -84,9 +113,64 @@ export function AdminLayout({
             </div>
 
             <div className="flex flex-col gap-2">
-              {items.map((it) => (
-                <NavLink key={it.href} href={it.href} label={it.label} active={pathname.startsWith(it.href)} badge={it.badge} />
-              ))}
+              {items.map((it) => {
+                const hasChildren = Array.isArray(it.children) && it.children.length > 0;
+
+                if (!hasChildren) {
+                  // leaf
+                  if (!it.href) return null;
+                  return (
+                    <NavLink
+                      key={it.href}
+                      href={it.href}
+                      label={it.label}
+                      active={pathname === it.href || pathname.startsWith(it.href + "/")}
+                      badge={it.badge}
+                    />
+                  );
+                }
+
+                const groupHref = it.href;
+                const groupActive = groupHref ? pathname === groupHref || pathname.startsWith(groupHref + "/") : false;
+                const childActive = it.children!.some((c) => (c.href ? pathname === c.href || pathname.startsWith(c.href + "/") : false));
+                const open = it.defaultOpen ?? (groupActive || childActive);
+
+                return (
+                  <details key={it.label} open={open} className="rounded-md">
+                    <summary className="list-none">
+                      <div className="flex items-center justify-between gap-2 rounded-md px-3 py-2 text-sm font-extrabold tracking-tight text-[#111827] hover:bg-gray-200">
+                        <span className="truncate">{it.label}</span>
+                        <span className="text-xs text-gray-500">▾</span>
+                      </div>
+                    </summary>
+
+                    <div className="mt-1 flex flex-col gap-1 pl-3">
+                      {groupHref ? (
+                        <NavLink
+                          href={groupHref}
+                          label="Overview"
+                          active={groupActive}
+                          className="text-xs font-bold"
+                        />
+                      ) : null}
+
+                      {it.children!.map((c) => {
+                        if (!c.href) return null;
+                        return (
+                          <NavLink
+                            key={c.href}
+                            href={c.href}
+                            label={c.label}
+                            active={pathname === c.href || pathname.startsWith(c.href + "/")}
+                            badge={c.badge}
+                            className="text-sm font-semibold"
+                          />
+                        );
+                      })}
+                    </div>
+                  </details>
+                );
+              })}
             </div>
 
             <div className="mt-6 rounded-md bg-gray-100 p-3 text-xs text-gray-700">

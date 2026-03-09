@@ -163,7 +163,16 @@ export default function InboxPage() {
       title="Inbox"
       nav={[
         { href: "/inbox", label: "Inbox", badge: allNewCount },
-        { href: "/", label: "Contact Form" },
+        {
+          label: "Contact-us",
+          href: "/contact-us",
+          defaultOpen: true,
+          children: [
+            { href: "/contact-us/a", label: "A" },
+            { href: "/contact-us/b", label: "B" },
+            { href: "/contact-us/c", label: "C" },
+          ],
+        },
       ]}
     >
       <div className="grid gap-4 lg:grid-cols-[260px_1fr]">
