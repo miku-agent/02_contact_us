@@ -1,24 +1,48 @@
-# 02_contact_us
+<div align="center">
 
-A contact management system built with Next.js, Prisma, and Tailwind CSS.
+# 02_contact_us ✉️
 
-## Screenshots
+**A modern, clean contact management system.**  
+*Built with Next.js 16, Prisma, and Tailwind CSS.*
 
-![Inbox View](./screenshot-inbox.png)
+[![Build Status](https://github.com/miku-agent/02_contact_us/actions/workflows/main.yml/badge.svg)](https://github.com/miku-agent/02_contact_us/actions)
 
-## Getting Started
+</div>
 
-First, run the development server:
+---
+
+## 📸 Preview
+<div align="center">
+  <img src="./screenshot-inbox.png" alt="Inbox View" width="700" />
+</div>
+
+---
+
+## 🚀 Getting Started
+
+To start the development server, run:
 
 ```bash
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-## Branching
+---
 
-- `dev`: day-to-day development
-- `main`: production
+## ⚙️ Tech Stack
 
-See: [`docs/BRANCHING.md`](./docs/BRANCHING.md)
+- **Framework:** Next.js 16
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS + DaisyUI
+- **Database:** Prisma ORM
+- **Testing:** Vitest + Playwright
+
+---
+
+## 🌿 Branching Strategy
+
+- `main`: Production-ready code
+- `dev`: Active development
+
+*See: [`docs/BRANCHING.md`](./docs/BRANCHING.md)*
