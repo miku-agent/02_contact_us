@@ -115,7 +115,7 @@ export function AdminLayout({
 
   const dynamicServices = useMemo<NavItem[]>(() => {
     return pm2Services.map((svc) => ({
-      href: `/contact-us/${encodeURIComponent(svc.name)}`,
+      href: `/services/${encodeURIComponent(svc.name)}`,
       label: svc.name,
     }));
   }, [pm2Services]);
@@ -124,7 +124,7 @@ export function AdminLayout({
     const baseItems: NavItem[] =
       nav ??
       ([
-        { href: "/contact-us/all", label: "All Messages" },
+        { href: "/services/all", label: "All Messages" },
         {
           label: "Services",
           defaultOpen: true,
