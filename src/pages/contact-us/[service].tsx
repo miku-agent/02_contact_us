@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { AdminLayout } from "../components/AdminLayout";
+import { AdminLayout } from "../../components/AdminLayout";
 import { useRouter } from "next/router";
 
 type ContactStatus = "NEW" | "DONE" | "ARCHIVED" | "SPAM";
