@@ -3,8 +3,6 @@ name: 🧪 02_contact_us Integration Test
 on:
   pull_request:
     branches: [ dev, main ]
-  push:
-    branches: [ dev ]
 
 jobs:
   test:

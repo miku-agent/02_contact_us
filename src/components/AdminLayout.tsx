@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect, useMemo, useState } from "react";
 import type { ReactNode } from "react";
 
 type NavItem = {
@@ -8,6 +9,10 @@ type NavItem = {
   badge?: number;
   children?: NavItem[];
   defaultOpen?: boolean;
+};
+
+type Pm2Service = {
+  name: string;
 };
 
 function NavLink({
@@ -85,20 +90,58 @@ export function AdminLayout({
   const router = useRouter();
   const pathname = router.asPath;
 
-  const items: NavItem[] =
-    nav ??
-    [
-      { href: "/contact-us/all", label: "All Messages" },
-      {
-        label: "Services",
-        defaultOpen: true,
-        children: [
-          { href: "/contact-us/a", label: "MikuDashboard" },
-          { href: "/contact-us/b", label: "B" },
-          { href: "/contact-us/c", label: "C" },
-        ],
-      },
-    ];
+  const [pm2Services, setPm2Services] = useState<Pm2Service[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/services/pm2")
+      .then((res) => res.json())
+      .then((json) => {
+        if (cancelled) return;
+        if (!json.ok) return;
+        const items = Array.isArray(json.items) ? (json.items as { name?: string }[]) : [];
+        setPm2Services(items.filter((i) => i?.name).map((i) => ({ name: String(i.name) })));
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setPm2Services([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const dynamicServices = useMemo<NavItem[]>(() => {
+    return pm2Services.map((svc) => ({
+      href: `/contact-us/${encodeURIComponent(svc.name)}`,
+      label: svc.name,
+    }));
+  }, [pm2Services]);
+
+  const items = useMemo(() => {
+    const baseItems: NavItem[] =
+      nav ??
+      ([
+        { href: "/contact-us/all", label: "All Messages" },
+        {
+          label: "Services",
+          defaultOpen: true,
+          children: [{ href: "/services/pm2", label: "PM2 List" }],
+        },
+      ] as NavItem[]);
+
+    return baseItems.map((it) => {
+      if (it.label !== "Services" || !it.children) return it;
+
+      const preserved = it.children.filter((c) => c.href === "/services/pm2");
+      return {
+        ...it,
+        children: [...preserved, ...dynamicServices],
+      };
+    });
+  }, [nav, dynamicServices]);
 
   return (
     <div className="min-h-screen bg-[#F3F4F6] text-[#111827]">
