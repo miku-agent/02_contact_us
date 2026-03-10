@@ -9,10 +9,11 @@ export default function ContactUsOverviewPage() {
       nav={[
         { href: "/inbox", label: "Inbox" },
         {
-          label: "Contact-us",
-          href: "/contact-us",
+          label: "Services",
+          href: "/services/pm2",
           defaultOpen: true,
           children: [
+            { href: "/services/pm2", label: "PM2 List" },
             { href: "/contact-us/a", label: "MikuDashboard" },
             { href: "/contact-us/b", label: "B" },
             { href: "/contact-us/c", label: "C" },

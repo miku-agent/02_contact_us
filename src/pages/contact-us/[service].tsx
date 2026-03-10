@@ -156,6 +156,7 @@ export default function InboxPage() {
           label: "Services",
           defaultOpen: true,
           children: [
+            { href: "/services/pm2", label: "PM2 List" },
             { href: "/contact-us/a", label: "MikuDashboard" },
             { href: "/contact-us/b", label: "B" },
             { href: "/contact-us/c", label: "C" },
