@@ -1,10 +1,10 @@
 # 🎵 02_contact_us
 
-![Inbox View](./screenshot-inbox.png)
+![Contact Us Overview](./public/screenshot.png)
 
 ## 🎤 프로젝트 소개 (Project Intro)
 
-연락처 관리 시스템입니다. Next.js, Prisma, Tailwind CSS를 사용하여 깔끔하고 효율적으로 연락처를 관리할 수 있도록 설계되었습니다. ✨
+여러 제품/서비스에 대한 고객 문의를 통합 관리하는 **고객 문의(Contact-us) 허브 시스템**입니다. 각 제품별(MikuDashboard, B, C 등) 문의 페이지를 관리하고, 고객이 남긴 문의 사항을 인박스에서 확인할 수 있도록 설계되었습니다. ✨
 
 ## 🎹 기술 스택 (Tech Stack)
 
