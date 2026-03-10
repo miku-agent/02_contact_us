@@ -88,10 +88,9 @@ export function AdminLayout({
   const items: NavItem[] =
     nav ??
     [
-      { href: "/inbox", label: "Inbox" },
+      { href: "/contact-us/all", label: "All Messages" },
       {
-        label: "Contact-us",
-        href: "/contact-us",
+        label: "Services",
         defaultOpen: true,
         children: [
           { href: "/contact-us/a", label: "MikuDashboard" },
